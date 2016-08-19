@@ -11,7 +11,6 @@ let globalConfig = require('./global.config')
 config.devtool = '#eval-source-map'
 
 let PUBLIC_PATH
-// 如果webpack是中间件模式,则需要给entry加webpack-hot-middleware/client, 达到hot-reload的效果
 if (process.env.WEBPACK_MODE === 'middleware') {
   PUBLIC_PATH = globalConfig.appServerPath
   // add hot-reload related code to entry chunks
@@ -22,7 +21,6 @@ if (process.env.WEBPACK_MODE === 'middleware') {
     config.entry[name] = extras.concat(config.entry[name])
   })
 }
-// 如果webpack不是中间件模式(独立服务模式),则需要给entry加webpack-dev-server/client, 达到hot-reload的效果
 else {
   PUBLIC_PATH = globalConfig.webpackServerPath
   Object.keys(config.entry).forEach((name) => {

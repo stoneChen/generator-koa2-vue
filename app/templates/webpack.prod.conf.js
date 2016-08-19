@@ -12,7 +12,6 @@ let AssetsWebpackPlugin = require('assets-webpack-plugin')
 // config.output.filename = '[name].[hash:8].js'
 // config.output.chunkFilename = '[id].[hash:8].js'
 config.output.publicPath = '/public/'
-// 暂时不加后缀了
 config.output.filename = '[name].[hash:7].js'
 config.output.chunkFilename = '[id].[hash:7].js'
 

@@ -1,8 +1,9 @@
 {
-  "name": "hzbank-food-coupon",
+  "name": "<%= appName %>",
   "version": "1.0.0",
-  "description": "杭州银行饭票前端全栈工程",
+  "description": "",
   "main": "server/index.js",
+  "private": true,
   "scripts": {
     "start": "cross-env DEBUG=koa*,app:* NODE_ENV=development WEBPACK_MODE=middleware node server/index.js",
     "nodemon": "gulp lint && gulp serve",
@@ -68,8 +69,8 @@
     "koa-webpack-hot-middleware": "1.0.3",
     "nodemon": "1.10.0",
     "open": "0.0.5",
-    "postcss-loader": "0.8.2",
-    "postcss-pxtorem": "3.3.1",
+    "postcss-loader": "0.8.2",<% if (props.isMobile) { %>
+    "postcss-pxtorem": "3.3.1",<% } %>
     "raw-loader": "0.5.1",
     "rimraf": "2.5.2",
     "socket.io": "1.4.8",
