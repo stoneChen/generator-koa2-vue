@@ -1,0 +1,11 @@
+{
+  "script": "server/index.js",
+  "verbose": true,
+  "ignore": ["client/*", "public/*"],
+  "env": {
+    "NODE_ENV": "development",
+    "DEBUG": "koa*,app:*"
+  },
+  "ext": "js ejs",
+  "tasks": ["lint"]
+}

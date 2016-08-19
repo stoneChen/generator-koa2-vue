@@ -1,0 +1,6 @@
+assets/*
+node_modules/*
+coverage/*
+tmp/*
+jquery.flipster.min.js
+slide.js

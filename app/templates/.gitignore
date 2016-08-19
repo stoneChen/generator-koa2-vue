@@ -1,0 +1,14 @@
+.DS_Store
+node_modules/
+npm-debug.log
+dist/
+zip
+.idea
+*.swp
+*.swo
+
+public/
+build/
+server/views-dist/
+webpack.assets.json
+proxy.config.js
