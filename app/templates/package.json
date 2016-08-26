@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "start": "cross-env DEBUG=koa*,app:* NODE_ENV=development WEBPACK_MODE=middleware node server/index.js",
+    "postinstall": "node copy-proxy-config.js",
     "nodemon": "gulp lint && gulp serve",
     "lint": "eslint server",
     "fetch-proxy-config": "node fetch-proxy-config.js",
@@ -43,6 +44,7 @@
     "html-webpack-plugin": "2.16.0",
     "isomorphic-fetch": "2.2.1",
     "koa": "2.0.0",
+    "koa-logger": "1.3.0",
     "koa-bodyparser": "3.1.0",
     "koa-convert": "1.2.0",
     "koa-generic-session": "1.10.0",

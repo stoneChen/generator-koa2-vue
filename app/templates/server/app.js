@@ -1,6 +1,7 @@
 'use strict'
 import path from 'path'
 import Koa from 'koa'
+import logger from 'koa-logger'
 import convert from 'koa-convert'
 import serve from 'koa-static'
 import koaProxy from 'koa-proxy'
@@ -14,7 +15,7 @@ import proxyConfig from '../proxy.config'
 const globalConfig = require('../global.config')
 
 const log = debug('app:log')
-// const warn = debug('app:warn')
+const warn = debug('app:warn')
 const error = debug('app:error')
 
 const app = new Koa()
@@ -23,6 +24,9 @@ log(`current env is ${IS_DEBUG ? 'DEBUG' : 'production'}`)
 
 // trust proxy
 app.proxy = true
+
+// log记录
+app.use(convert(logger()))
 
 if (IS_WEBPACK_MIDDLEWARE) {
   require('./webpack.middleware')(app)
@@ -71,8 +75,14 @@ app.use(routes.middleware())
 // 需要特殊处理的请求,直接在路由中调用ctx.body = xxx即可, 不需要返回async函数
 
 app.use(async (ctx, next) => {
-  log('request `%s` will be dispatched to %s', ctx.request.url, proxyConfig.apiHost)
-  await next()
+  let path = ctx.url
+  if (!path.startsWith('/api/')) {
+  warn('request `%s` does not start with `/api`, skipped proxy', path)
+  return
+}
+ctx.url = path.substr(4)
+log('request `%s` will be dispatched to `%s` with `%s`', path, proxyConfig.apiHost, ctx.url)
+await next()
 })
 // proxy
 app.use(convert(koaProxy({
@@ -94,6 +104,9 @@ if (IS_DEBUG) {
   require('socket.io')(server)
   server.listen(globalConfig.appPort)
   log('socket.io created.')
+  if (IS_WEBPACK_MIDDLEWARE) {
+    require('open')(appUrl)
+  }
 } else {
   app.listen(globalConfig.appPort)
 }

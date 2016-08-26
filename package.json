@@ -9,7 +9,8 @@
   "scripts": {
     "vp": "mversion patch -m 'Bumped to v%s'",
     "vm": "mversion minor -m 'Bumped to v%s'",
-    "vmajor": "mversion major -m 'Bumped to v%s'"
+    "vmajor": "mversion major -m 'Bumped to v%s'",
+    "pub-minor": "npm run vm && npm publish"
   },
   "publishConfig": {
     "registry": "http://registry.npmjs.org"
