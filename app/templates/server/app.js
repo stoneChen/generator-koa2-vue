@@ -32,21 +32,10 @@ if (IS_WEBPACK_MIDDLEWARE) {
   require('./webpack.middleware')(app)
 }
 
-// 开发模式,使用webpack打包js, 静态资源代理到webpack服务, ejs中还是写/public/xxx
 // 生产环境根据webpack输出的文件,进行serve
-if (IS_DEBUG) {
-  // app.use(convert(koaProxy({
-  //   host: ['http://', globalConfig.currentIP, ':', globalConfig.webpackDevServerPort].join(''),
-  //   match: /^\/public\//,
-  //   // 用于禁止cookie缓存
-  //   // see https://github.com/request/request#requestoptions-callback
-  //   jar: false
-  // })))
-} else {
-  // todo 如果资源不存在, 不要继续downstream, 否则请求会被代理到后端
-  app.use(mount('/public', serve(path.join(__dirname, '../public'), {
-    // defer: false
-  })))
+// 或者考虑将静态资源发布到CDN
+if (!IS_DEBUG) {
+  app.use(mount('/public', serve(path.join(__dirname, '../public'))))
 }
 
 // body parser
@@ -55,9 +44,7 @@ app.use(bodyParser())
 // 外层处理
 app.use(async (ctx, next) => {
   try {
-    // log('request: `%s`', ctx.request.url)
     await next()
-    // log('response for `%s`:\n %s', ctx.request.url, ctx.body.toString('utf-8'))
   } catch (err) {
     ctx.status = err.status || 500
     ctx.body = err.stack
@@ -72,17 +59,17 @@ app.use(views(path.join(__dirname, 'views/'), {
 // 路由配置
 app.use(routes.middleware())
 
-// 需要特殊处理的请求,直接在路由中调用ctx.body = xxx即可, 不需要返回async函数
+// 需要特殊处理的请求,在路由中最后调用ctx.body = xxx即可, 不需要返回async函数
 
 app.use(async (ctx, next) => {
-  let path = ctx.url
-  if (!path.startsWith('/api/')) {
-  warn('request `%s` does not start with `/api`, skipped proxy', path)
-  return
-}
-ctx.url = path.substr(4)
-log('request `%s` will be dispatched to `%s` with `%s`', path, proxyConfig.apiHost, ctx.url)
-await next()
+  let url = ctx.url
+  if (!url.startsWith('/api/')) {
+    warn('request `%s` does not start with `/api`, skipped proxy', url)
+    return
+  }
+  ctx.url = url.substr(4)
+  log('request `%s` will be dispatched to `%s` with `%s`', url, proxyConfig.apiHost, ctx.url)
+  await next()
 })
 // proxy
 app.use(convert(koaProxy({
@@ -104,6 +91,7 @@ if (IS_DEBUG) {
   require('socket.io')(server)
   server.listen(globalConfig.appPort)
   log('socket.io created.')
+  // 如果是融合模式, 直接打开浏览器
   if (IS_WEBPACK_MIDDLEWARE) {
     require('open')(appUrl)
   }

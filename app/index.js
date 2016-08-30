@@ -16,6 +16,11 @@ module.exports = yeoman.generators.Base.extend({
     });
   },
   prompting: function () {
+    // this.props = {
+    //   isMobile: true
+    // }
+    // this.async()()
+    // return
     var done = this.async();
 
     // Have Yeoman greet the user.
