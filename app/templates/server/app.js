@@ -84,20 +84,7 @@ app.on('error', (err) => {
 })
 
 let appUrl = ['http://', globalConfig.currentIP, ':', globalConfig.appPort].join('')
-// 服务端重启,再次连接上socket后,自动刷新浏览器
-if (IS_DEBUG) {
-  // socket.io必须拿到通过http模块创建的实例
-  let server = require('http').createServer(app.callback())
-  require('socket.io')(server)
-  server.listen(globalConfig.appPort)
-  log('socket.io created.')
-  // 如果是融合模式, 直接打开浏览器
-  if (IS_WEBPACK_MIDDLEWARE) {
-    require('open')(appUrl)
-  }
-} else {
-  app.listen(globalConfig.appPort)
-}
+app.listen(globalConfig.appPort)
 log(`App is now listening on ${appUrl}`)
 
 process.on('SIGINT', () => {
