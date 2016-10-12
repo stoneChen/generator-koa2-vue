@@ -4,12 +4,12 @@
 
 ### 安装
 ```
-npm install generator-vue-workflow -g
+npm install generator-koa2-vue -g
 ```
 ### 使用
 新建一个工程目录并进入,然后:
 ```
-yo vue-workflow 
+yo koa2-vue
 ```
 
 ### 启动
